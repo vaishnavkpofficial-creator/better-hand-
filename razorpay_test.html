@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head><title>Razorpay Test Checkout</title></head>
+<body>
+  <h3>BetterHand — Bystander Payment Test</h3>
+  <button id="payBtn">Pay Now</button>
+  <pre id="output"></pre>
+
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script>
+    // 1. Fill these in from your create-order/ response (call it via /docs first)
+    const RAZORPAY_KEY_ID = "rzp_test_TZ44jHwlDTka1p";
+    const ORDER_ID = "order_TZ6l6Rk4A4J6Hf";
+    const AMOUNT_PAISE = 5000; // must match what create-order/ returned
+
+    document.getElementById("payBtn").onclick = function () {
+      const options = {
+        key: RAZORPAY_KEY_ID,
+        amount: AMOUNT_PAISE,
+        currency: "INR",
+        name: "BetterHand Test",
+        description: "Bystander blood request fee",
+        order_id: ORDER_ID,
+        handler: function (response) {
+          // These three values are exactly what your /requests/ endpoint needs
+          document.getElementById("output").textContent =
+            "razorpay_order_id: " + response.razorpay_order_id + "\n" +
+            "razorpay_payment_id: " + response.razorpay_payment_id + "\n" +
+            "razorpay_signature: " + response.razorpay_signature;
+        },
+        theme: { color: "#e63946" }
+      };
+      const rzp = new Razorpay(options);
+      rzp.open();
+    };
+  </script>
+</body>
+</html>
